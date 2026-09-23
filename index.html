@@ -297,6 +297,7 @@
   <button class="tab active" data-target="calendario">📅 Calendario</button>
   <button class="tab" data-target="horario">🕐 Horario</button>
   <button class="tab" data-target="cumple">🎂 Cumpleaños</button>
+  <button class="tab" data-target="vialidad">🚗 Vialidad</button>
   <button class="tab" data-target="tarea">📝 Tarea de la semana</button>
   <button class="tab" data-target="faq">❓ Preguntas frecuentes</button>
   <button class="tab" data-target="circulares">📣 Circulares vigentes</button>
@@ -369,6 +370,23 @@
         <li><strong>8 de junio</strong> — Miss Georgina (Cómputo)</li>
       </ul>
     </div>
+  </section>
+
+  <!-- ===================== VIALIDAD ===================== -->
+  <section id="vialidad">
+    <h2 class="section-title">Rol de vialidad 2026-2027</h2>
+    <p class="section-sub">3°C Primaria Patria · fuente: "Rol de vialidad 2026-2027 3°C Primaria" (carpeta "Vialidad" en Drive)</p>
+
+    <div class="note-box">
+      Busca tu apellido para ver qué día te toca apoyar en vialidad. El rol corre del 19 de enero al 2 de febrero de 2027; confirma el horario exacto con la circular o el grupo del salón (normalmente durante la entrada, alrededor de las 7:00–8:00 hrs).
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="vialidad-search" placeholder="Buscar por apellido o nombre del alumno...">
+    </div>
+
+    <div id="vialidad-list"></div>
+    <div class="no-results" id="vialidad-no-results" style="display:none;">No se encontró ningún alumno con ese nombre.</div>
   </section>
 
   <!-- ===================== TAREA DE LA SEMANA ===================== -->
@@ -753,6 +771,74 @@ function renderBirthdays(){
   el.appendChild(pendingBox);
 }
 renderBirthdays();
+
+/* ===================== DATOS: VIALIDAD ===================== */
+const vialidad = [
+  {date:"19 de enero de 2027", name:"Aguilar Huerta Fernando Santiago"},
+  {date:"19 de enero de 2027", name:"Ávila Ramírez José María"},
+  {date:"19 de enero de 2027", name:"Barón Quevedo Matías"},
+  {date:"20 de enero de 2027", name:"Barroso Gámez Luciana"},
+  {date:"20 de enero de 2027", name:"Blásquez Zúñiga Luis Octavio"},
+  {date:"20 de enero de 2027", name:"Camacho Godoy Kael"},
+  {date:"21 de enero de 2027", name:"Corona González Constanza Margarita"},
+  {date:"21 de enero de 2027", name:"De La Torre Valle Regina Alitze"},
+  {date:"21 de enero de 2027", name:"Díaz Castro Ian Alexander"},
+  {date:"22 de enero de 2027", name:"González López Jacob"},
+  {date:"22 de enero de 2027", name:"Guzmán Martínez Cedric Josué"},
+  {date:"22 de enero de 2027", name:"Hernández Virgen Matías"},
+  {date:"25 de enero de 2027", name:"Iñiguez Álvarez Gala Daniela"},
+  {date:"25 de enero de 2027", name:"Jaramillo Rubio Evelia Itzayana"},
+  {date:"25 de enero de 2027", name:"López Orozco Rodrigo"},
+  {date:"26 de enero de 2027", name:"López Rodríguez Catherine"},
+  {date:"26 de enero de 2027", name:"Martín del Campo Ortiz Arya"},
+  {date:"26 de enero de 2027", name:"Medina Robledo Jesús"},
+  {date:"27 de enero de 2027", name:"Mejía López Salvador"},
+  {date:"27 de enero de 2027", name:"Mejía Rimoldi María José"},
+  {date:"27 de enero de 2027", name:"Pérez Rodríguez Ana Lucía"},
+  {date:"28 de enero de 2027", name:"Pérez Rojas Catalina"},
+  {date:"28 de enero de 2027", name:"Ramírez Ceceña Maia Ximena"},
+  {date:"28 de enero de 2027", name:"Reyes Suárez Aranza Itzel"},
+  {date:"2 de febrero de 2027", name:"Rodríguez Peña Ana Paula"},
+  {date:"2 de febrero de 2027", name:"Zepeda Quezada Mariano"},
+];
+
+function renderVialidad(){
+  const el = document.getElementById('vialidad-list');
+  const noRes = document.getElementById('vialidad-no-results');
+  const term = document.getElementById('vialidad-search').value.trim().toLowerCase();
+  el.innerHTML = "";
+
+  const filtered = vialidad.filter(v => !term || v.name.toLowerCase().includes(term));
+  if(filtered.length === 0){
+    noRes.style.display = "block";
+    return;
+  }
+  noRes.style.display = "none";
+
+  const byDate = {};
+  filtered.forEach(v=>{
+    if(!byDate[v.date]) byDate[v.date] = [];
+    byDate[v.date].push(v);
+  });
+
+  Object.keys(byDate).forEach(date=>{
+    const group = document.createElement('div');
+    group.className = "month-group";
+    const h3 = document.createElement('h3');
+    h3.textContent = date;
+    group.appendChild(h3);
+
+    byDate[date].forEach(v=>{
+      const div = document.createElement('div');
+      div.className = "event General";
+      div.innerHTML = `<div class="event-name">${v.name}</div>`;
+      group.appendChild(div);
+    });
+    el.appendChild(group);
+  });
+}
+document.getElementById('vialidad-search').addEventListener('input', renderVialidad);
+renderVialidad();
 
 /* ===================== DATOS: TAREA DE LA SEMANA ===================== */
 const homework = {
